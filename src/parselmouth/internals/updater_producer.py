@@ -27,6 +27,30 @@ def main(
 ):
     subdirs = get_all_archs_available(channel)
 
+    if subdirs is None:
+        # fallback list of known subdirs
+        subdirs = [
+            "emscripten-wasm32",
+            "freebsd-64",
+            "linux-32",
+            "linux-64",
+            "linux-aarch64",
+            "linux-armv6l",
+            "linux-armv7l",
+            "linux-ppc64",
+            "linux-ppc64le",
+            "linux-riscv64",
+            "linux-s390x",
+            "noarch",
+            "osx-64",
+            "osx-arm64",
+            "wasi-wasm32",
+            "win-32",
+            "win-64",
+            "win-arm64",
+            "zos-z",
+        ]
+
     # filter out the subdir we want to update
     if subdir and subdir in subdirs:
         subdirs = [subdir]

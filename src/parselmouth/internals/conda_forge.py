@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import tarfile
 from ruamel import yaml
-from typing import Generator, Tuple
+from typing import Generator, Optional, Tuple
 import requests
 import logging
 import conda_forge_metadata.artifact_info
@@ -16,10 +16,17 @@ from urllib.parse import urljoin
 from parselmouth.internals.channels import ChannelUrls, SupportedChannels
 
 
-def get_all_archs_available(channel: SupportedChannels) -> list[str]:
+def get_all_archs_available(channel: SupportedChannels) -> Optional[list[str]]:
     channel_url = ChannelUrls.main_channel(channel)
 
     response = requests.get(urljoin(channel_url, "channeldata.json"))
+
+    if not response.ok:
+        logging.error(
+            f"Request for channeldata to {channel_url} failed. {response.reason}"
+        )
+        return None
+
     channel_json = response.json()
     # Collect all subdirectories
     subdirs: list[str] = []
